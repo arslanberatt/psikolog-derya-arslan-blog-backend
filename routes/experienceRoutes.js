@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getDashboardSummary } = require("../controllers/dashboardController");
+const {
+  createExperience,
+  getAllExperiences,
+  updateExperience,
+  deleteExperience,
+} = require("../controllers/experienceController");
 const { protect } = require("../middlewares/authMiddleware");
 
 const adminOnly = (req, res, next) => {
@@ -13,6 +18,9 @@ const adminOnly = (req, res, next) => {
   }
 };
 
-router.get("/", protect, adminOnly, getDashboardSummary);
+router.get("/", getAllExperiences);
+router.post("/", protect, adminOnly, createExperience);
+router.put("/:id", protect, adminOnly, updateExperience);
+router.delete("/:id", protect, adminOnly, deleteExperience);
 
 module.exports = router;

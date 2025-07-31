@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getDashboardSummary } = require("../controllers/dashboardController");
+const {
+  getAbout,
+  updateAbout,
+  // createAbout,
+} = require("../controllers/aboutController");
 const { protect } = require("../middlewares/authMiddleware");
 
 const adminOnly = (req, res, next) => {
@@ -12,7 +16,8 @@ const adminOnly = (req, res, next) => {
       .json({ message: "Bu işlemi yapma yetkiniz bulunmamaktadır!" });
   }
 };
-
-router.get("/", protect, adminOnly, getDashboardSummary);
+// router.post("/", protect, adminOnly, createAbout);
+router.get("/", getAbout);
+router.put("/:id", protect, adminOnly, updateAbout);
 
 module.exports = router;
