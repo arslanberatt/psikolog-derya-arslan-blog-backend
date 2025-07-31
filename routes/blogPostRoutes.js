@@ -11,6 +11,7 @@ const {
   incrementView,
   likePost,
   getTopPosts,
+  getLastPosts,
 } = require("../controllers/blogPostController");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -31,6 +32,7 @@ router.get("/tag/:tag", getPostByTag);
 router.get("/search", searchPosts);
 router.post("/:id/view", incrementView);
 router.post("/:id/like", protect, likePost);
-router.post("/trending", getTopPosts);
+router.get("/trending", getTopPosts);
+router.get("/last", getLastPosts);
 
 module.exports = router;

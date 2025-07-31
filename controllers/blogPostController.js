@@ -6,8 +6,16 @@ const createPost = async (req, res) => {
     const { title, content, coverImageUrl, tags, isDraft } = req.body;
     const slug = title
       .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^\w-]+/g, "");
+      .replace(/ç/g, "c")
+      .replace(/ğ/g, "g")
+      .replace(/ı/g, "i")
+      .replace(/ö/g, "o")
+      .replace(/ş/g, "s")
+      .replace(/ü/g, "u")
+      .replace(/[^a-z0-9 -]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-+|-+$/g, "");
 
     const newPost = new BlogPost({
       title,
@@ -44,8 +52,16 @@ const updatePost = async (req, res) => {
     if (updateData.title) {
       updateData.slug = updateData.title
         .toLowerCase()
-        .replace(/ /g, "-")
-        .replace(/[^\w-]+/g, "");
+        .replace(/ç/g, "c")
+        .replace(/ğ/g, "g")
+        .replace(/ı/g, "i")
+        .replace(/ö/g, "o")
+        .replace(/ş/g, "s")
+        .replace(/ü/g, "u")
+        .replace(/[^a-z0-9 -]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-+|-+$/g, "");
     }
     const updatePost = await BlogPost.findByIdAndUpdate(
       req.params.id,
@@ -69,6 +85,7 @@ const deletePost = async (req, res) => {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const getAllPosts = async (req, res) => {
   try {
     const status = req.query.status || "published";
@@ -108,42 +125,93 @@ const getAllPosts = async (req, res) => {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const getPostBySlug = async (req, res) => {
   try {
+    const post = await BlogPost.findOne({ slug: req.params.slug }).populate(
+      "author",
+      "name profileImageUrl"
+    );
+    if (!post)
+      return res.status(404).json({ message: "Böyle bir post bulunamadı!" });
+    res.json(post);
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const getPostByTag = async (req, res) => {
   try {
+    const posts = await BlogPost.find({
+      tags: req.params.tag,
+      isDraft: false,
+    }).populate("author", "name profileImageUrl");
+    res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const searchPosts = async (req, res) => {
   try {
+    const q = req.query.q;
+    const posts = await BlogPost.find({
+      isDraft: false,
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { content: { $regex: q, $options: "i" } },
+      ],
+    }).populate("author", "name profileImageUrl");
+    res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const incrementView = async (req, res) => {
   try {
+    await BlogPost.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
+    res.json({ message: "Görüntülendi +1" });
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const likePost = async (req, res) => {
   try {
+    await BlogPost.findByIdAndUpdate(req.params.id, { $inc: { likes: 1 } });
+    res.json({ message: "Beğenildi +1" });
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
 const getTopPosts = async (req, res) => {
   try {
+    const posts = await BlogPost.find({
+      isDraft: false,
+    })
+      .sort({ views: -1, likes: -1 })
+      .limit(5);
+    res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server'da sorun var." }, error);
   }
 };
+
+const getLastPosts = async (req, res) => {
+  try {
+    const posts = await BlogPost.find({
+      isDraft: false,
+    })
+      .sort({ updatedAt: -1 })
+      .limit(3);
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: "Server'da sorun var." }, error);
+  }
+};
+
 module.exports = {
   createPost,
   updatePost,
@@ -155,4 +223,5 @@ module.exports = {
   incrementView,
   likePost,
   getTopPosts,
+  getLastPosts
 };
