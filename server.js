@@ -7,9 +7,8 @@ const connectDB = require("./config/db");
 // Route imports
 const authRoutes = require("./routes/authRoutes");
 const blogPostRoutes = require("./routes/blogPostRoutes");
-// const commentRoutes = require("./routes/commentRoutes");
-// const dashboardRoutes = require("./routes/dashboardRoutes");
-// const aiRoutes = require("./routes/aiRoutes");
+const commentRoutes = require("./routes/commentRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -31,8 +30,8 @@ app.use(express.json());
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", blogPostRoutes);
-// app.use("/api/comments", commentRoutes);
-// app.use("/api/dashboard-summary", dashboardRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/dashboard-summary", dashboardRoutes);
 
 // //AI
 // app.use("/api/ai", aiRoutes);
