@@ -9,6 +9,9 @@ const authRoutes = require("./routes/authRoutes");
 const blogPostRoutes = require("./routes/blogPostRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const aboutRoutes = require("./routes/aboutRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
+const experienceRoutes = require("./routes/experienceRoutes");
 
 const app = express();
 
@@ -32,9 +35,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", blogPostRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/dashboard-summary", dashboardRoutes);
-
-// //AI
-// app.use("/api/ai", aiRoutes);
+app.use("/api/about", aboutRoutes);
+app.use("/api/service", serviceRoutes);
+app.use("/api/experience", experienceRoutes);
 
 // //Image folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));

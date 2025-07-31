@@ -1,5 +1,4 @@
 const BlogPost = require("../models/BlogPost");
-const mongoose = require("mongoose");
 
 const createPost = async (req, res) => {
   try {
@@ -204,6 +203,7 @@ const getLastPosts = async (req, res) => {
     const posts = await BlogPost.find({
       isDraft: false,
     })
+      .populate("author", "name profileImageUrl") // Resim ve yazar bilgisi eklendi
       .sort({ updatedAt: -1 })
       .limit(3);
     res.json(posts);
@@ -223,5 +223,5 @@ module.exports = {
   incrementView,
   likePost,
   getTopPosts,
-  getLastPosts
+  getLastPosts,
 };
