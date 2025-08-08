@@ -114,5 +114,5 @@ module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
-  deleteUser
+  deleteUser,
 };

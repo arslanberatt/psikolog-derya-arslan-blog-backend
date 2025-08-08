@@ -18,6 +18,6 @@ const adminOnly = (req, res, next) => {
 };
 // router.post("/", protect, adminOnly, createAbout);
 router.get("/", getAbout);
-router.put("/:id", protect, adminOnly, updateAbout);
+router.put("/", protect, adminOnly, updateAbout);
 
 module.exports = router;
