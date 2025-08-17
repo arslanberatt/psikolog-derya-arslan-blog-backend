@@ -3,7 +3,7 @@ const Service = require("../models/Service");
 // Yeni hizmet oluştur
 const createService = async (req, res) => {
   try {
-    const { title, description, related } = req.body; // blogId buradan gelecek
+    const { title, description, related } = req.body; // blog slug buradan gelecek
 
     if (!related) {
       return res.status(400).json({ message: "Lütfen ilgili blogu seçin." });
@@ -20,11 +20,8 @@ const createService = async (req, res) => {
     const service = await Service.create({
       title: titleTrimmed,
       description,
-      related,
+      related, // slug string kaydediyoruz
     });
-
-    // Blog bilgisini de populate ederek geri döndürelim
-    await service.populate("related", "title");
 
     res.status(201).json(service);
   } catch (error) {
@@ -38,9 +35,7 @@ const createService = async (req, res) => {
 // Tüm hizmetleri getir
 const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find()
-      .populate("related", "title") // sadece blog title
-      .sort({ title: 1 });
+    const services = await Service.find().sort({ title: 1 });
     res.json(services);
   } catch (error) {
     res.status(500).json({
@@ -63,7 +58,7 @@ const updateService = async (req, res) => {
 
     const updatedService = await Service.findByIdAndUpdate(id, updateData, {
       new: true,
-    }).populate("related", "title");
+    });
 
     res.json(updatedService);
   } catch (error) {
