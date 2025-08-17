@@ -98,7 +98,7 @@ const getAllPosts = async (req, res) => {
 
     const posts = await BlogPost.find(filter)
       .populate("author", "name profileImageUrl")
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
@@ -204,7 +204,7 @@ const getLastPosts = async (req, res) => {
       isDraft: false,
     })
       .populate("author", "name profileImageUrl") // Resim ve yazar bilgisi eklendi
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .limit(3);
     res.json(posts);
   } catch (error) {

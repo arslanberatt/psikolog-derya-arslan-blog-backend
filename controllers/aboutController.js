@@ -29,19 +29,15 @@ const getAbout = async (req, res) => {
 
 const updateAbout = async (req, res) => {
   try {
-    const about = await About.findById(req.params.id);
-
+    const about = await About.findOne();
     if (!about)
-      return res.status(404).json({ message: "Böyle bir yazı bulunamadı!" });
+      return res.status(404).json({ message: "Hakkımda içeriği bulunamadı!" });
 
-    const updateData = req.body;
-    const updateAbout = await About.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    );
+    const updated = await About.findByIdAndUpdate(about._id, req.body, {
+      new: true,
+    });
 
-    res.json(updateAbout);
+    res.json(updated);
   } catch (error) {
     res
       .status(500)

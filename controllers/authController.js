@@ -17,12 +17,6 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     let role = "member";
-    if (
-      adminAccessToken &&
-      adminAccessToken == process.env.ADMIN_ACCESS_TOKEN
-    ) {
-      role = "admin";
-    }
 
     const user = await User.create({
       name,
@@ -114,5 +108,5 @@ module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
-  deleteUser
+  deleteUser,
 };
