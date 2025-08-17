@@ -1,6 +1,5 @@
 const Service = require("../models/Service");
 
-// Yeni hizmet oluştur
 const createService = async (req, res) => {
   try {
     const { title, description, related } = req.body; // blog slug buradan gelecek
