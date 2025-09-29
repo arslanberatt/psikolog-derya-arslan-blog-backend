@@ -28,8 +28,8 @@ const adminOnly = (req, res, next) => {
 router.post("/", protect, adminOnly, createPost);
 router.get("/", getAllPosts);
 router.get("/slug/:slug", getPostBySlug);
-router.put("/:id", protect, adminOnly, updatePost);
-router.delete("/:id", protect, adminOnly, deletePost);
+router.put("/:id", protect, updatePost);
+router.delete("/:id", protect, deletePost);
 router.get("/tag/:tag", getPostByTag);
 router.get("/search", searchPosts);
 router.post("/:id/view", incrementView);

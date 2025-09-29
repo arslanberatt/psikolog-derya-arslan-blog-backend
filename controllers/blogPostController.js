@@ -39,13 +39,12 @@ const updatePost = async (req, res) => {
     const post = await BlogPost.findById(req.params.id);
     if (!post)
       return res.status(404).json({ message: "Böyle bir post bulunamadı!" });
-    if (
-      post.author.toString() !== req.user._id.toString() &&
-      !req.user.isAdmin
-    ) {
+    const isOwner = post.author.toString() === req.user._id.toString();
+    const isAdmin = req.user && req.user.role === "admin";
+    if (!isOwner && !isAdmin) {
       return res
         .status(403)
-        .json({ message: "Bu oturumu güncellemek için yetkili değil!" });
+        .json({ message: "Bu içeriği güncellemek için yetkiniz yok!" });
     }
     const updateData = req.body;
     if (updateData.title) {
